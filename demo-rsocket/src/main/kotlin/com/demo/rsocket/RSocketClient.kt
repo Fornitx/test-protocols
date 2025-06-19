@@ -1,0 +1,22 @@
+package com.demo.rsocket
+
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.rsocket.core.RSocketConnector
+import io.rsocket.transport.netty.client.TcpClientTransport
+import io.rsocket.util.DefaultPayload
+import reactor.core.publisher.Flux
+
+private val log = KotlinLogging.logger {}
+
+fun main() {
+    val clientTransport = TcpClientTransport.create("localhost", PORT)
+    val rSocket = RSocketConnector.connectWith(clientTransport).block()!!
+    rSocket.requestChannel(Flux.just(DefaultPayload.create("foo_"), DefaultPayload.create("bar_")))
+        .doOnNext { next ->
+            log.info { "Got next: ${next.dataUtf8}" }
+        }
+        .take(2)
+        .blockLast()
+
+    rSocket.dispose()
+}
