@@ -17,7 +17,7 @@ const val PORT = 8443
 const val PROTOCOL = "echo"
 
 val SERVER_KEYSTORE = File("etc/openssl/server-keystore.p12")
-val CLIENT_KEYSTORE = File("etc/openssl/truststore.p12")
+val TRUSTSTORE = File("etc/openssl/truststore.p12")
 val PASSWORD = "123456".toCharArray()
 
 private val log = KotlinLogging.logger {}

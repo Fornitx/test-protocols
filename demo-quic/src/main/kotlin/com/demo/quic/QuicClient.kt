@@ -3,7 +3,6 @@ package com.demo.quic
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tech.kwik.core.QuicClientConnection
 import tech.kwik.core.log.SysOutLogger
-import java.io.File
 import java.net.URI
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit
@@ -20,7 +19,7 @@ fun main() {
 //        .noServerCertificateCheck()
         .uri(URI.create("https://localhost:$PORT"))
         .applicationProtocol(PROTOCOL)
-        .customTrustStore(KeyStore.getInstance(CLIENT_KEYSTORE, PASSWORD))
+        .customTrustStore(KeyStore.getInstance(TRUSTSTORE, PASSWORD))
         .logger(logger)
         .build()
     connection.connect()
