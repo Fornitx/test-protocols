@@ -1,0 +1,13 @@
+[versions]
+#kotlin2-lang = "2.1.21"
+#kotlin2-logging = "7.0.7"
+
+[libraries]
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin2-lang" }
+kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin2-logging" }
+
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin2-lang" }
+#mockito = { id = "com.bakdata.mockito", version = "1.9.1" }
