@@ -1,10 +1,14 @@
 package com.demo.quic
 
+import com.demo.constants.PORT
+import com.demo.constants.PROTOCOL
+import com.demo.constants.TRUST_KEY_STORE
+import com.demo.data.StringData
+import com.demo.logging.ClientLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tech.kwik.core.QuicClientConnection
 import tech.kwik.core.log.SysOutLogger
 import java.net.URI
-import java.security.KeyStore
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
@@ -19,7 +23,7 @@ fun main() {
 //        .noServerCertificateCheck()
         .uri(URI.create("https://localhost:$PORT"))
         .applicationProtocol(PROTOCOL)
-        .customTrustStore(KeyStore.getInstance(TRUSTSTORE, PASSWORD))
+        .customTrustStore(TRUST_KEY_STORE)
         .logger(logger)
         .build()
     connection.connect()
@@ -34,21 +38,17 @@ fun main() {
             val available = inputStream.available()
             if (available > 0) {
                 val response = inputStream.readNBytes(available).decodeToString()
-                log.info { "QuicStream InputStream: $response" }
+                ClientLogger.log(response)
             }
             Thread.onSpinWait()
         }
     }
 
-    outputStream.write("foo_".encodeToByteArray())
-    outputStream.flush()
-
-    TimeUnit.SECONDS.sleep(1)
-
-    outputStream.write("bar_".encodeToByteArray())
-    outputStream.flush()
-
-    TimeUnit.SECONDS.sleep(1)
+    for (value in StringData.VALUES) {
+        outputStream.write(value.encodeToByteArray())
+        outputStream.flush()
+        TimeUnit.SECONDS.sleep(1)
+    }
 
     connection.close()
 }

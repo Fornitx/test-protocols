@@ -1,5 +1,8 @@
 package com.demo.quic
 
+import com.demo.constants.*
+import com.demo.data.StringData.asResponse
+import com.demo.logging.ServerLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import tech.kwik.core.KwikVersion
 import tech.kwik.core.QuicConnection
@@ -9,16 +12,7 @@ import tech.kwik.core.server.ApplicationProtocolConnection
 import tech.kwik.core.server.ApplicationProtocolConnectionFactory
 import tech.kwik.core.server.ServerConnectionConfig
 import tech.kwik.core.server.ServerConnector
-import java.io.File
-import java.security.KeyStore
 import kotlin.concurrent.thread
-
-const val PORT = 8443
-const val PROTOCOL = "echo"
-
-val SERVER_KEYSTORE = File("etc/openssl/server-keystore.p12")
-val TRUSTSTORE = File("etc/openssl/truststore.p12")
-val PASSWORD = "123456".toCharArray()
 
 private val log = KotlinLogging.logger {}
 
@@ -38,14 +32,12 @@ fun main() {
     logger.logInfo(true)
 //    logger.logPackets(true)
 
-    val keyStore = KeyStore.getInstance(SERVER_KEYSTORE, PASSWORD)
-
     val serverConnector = ServerConnector.builder()
         .withPort(PORT)
         .withSupportedVersions(listOf(QuicConnection.QuicVersion.V1, QuicConnection.QuicVersion.V2))
         .withConfiguration(serverConnectionConfig)
         .withLogger(logger)
-        .withKeyStore(keyStore, "server", "123456".toCharArray())
+        .withKeyStore(SERVER_KEY_STORE, SERVER_ALIAS, PASSWORD)
         .build()
 
     serverConnector.registerApplicationProtocol(PROTOCOL, EchoApplicationProtocolConnectionFactory())
@@ -73,8 +65,8 @@ class EchoApplicationProtocolConnection : ApplicationProtocolConnection {
                     val available = inputStream.available()
                     if (available > 0) {
                         val request = inputStream.readNBytes(available).decodeToString()
-                        log.info { "QuicStream InputStream: $request" }
-                        outputStream.write(request.repeat(3).encodeToByteArray())
+                        ServerLogger.log(request)
+                        outputStream.write(request.asResponse().encodeToByteArray())
                         outputStream.flush()
                     }
                     Thread.onSpinWait()

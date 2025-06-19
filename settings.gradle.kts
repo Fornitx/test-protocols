@@ -15,4 +15,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "demo-protocols"
 
-include("demo-rsocket", "demo-quic")
+include(
+    "common",
+    "demo-rsocket",
+    "demo-quic",
+    "demo-quic-netty",
+    "demo-quic-reactor"
+)
