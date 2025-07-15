@@ -14,7 +14,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioDatagramChannel
-import io.netty.incubator.codec.quic.*
+import io.netty.incubator.codec.quic.InsecureQuicTokenHandler
+import io.netty.incubator.codec.quic.QuicChannel
+import io.netty.incubator.codec.quic.QuicServerCodecBuilder
+import io.netty.incubator.codec.quic.QuicSslContextBuilder
+import io.netty.incubator.codec.quic.QuicStreamChannel
 import io.netty.util.concurrent.GenericFutureListener
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit

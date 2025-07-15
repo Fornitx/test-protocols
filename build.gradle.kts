@@ -12,12 +12,14 @@ subprojects {
 
     dependencies {
         implementation(platform(rootProject.libs.kotlin.bom))
+        implementation(platform(rootProject.libs.kotlin.coroutines))
 
-        implementation(kotlin("reflect"))
-        implementation(rootProject.libs.kotlin.logging)
-        implementation(rootProject.libs.logback)
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j")
 
-        testImplementation(kotlin("test-junit5"))
+        testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+        testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     }
 
     kotlin {
