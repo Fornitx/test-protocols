@@ -20,6 +20,7 @@ subprojects {
 
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
         testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+        testImplementation("org.junit.jupiter:junit-jupiter-params")
     }
 
     kotlin {

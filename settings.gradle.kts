@@ -17,8 +17,14 @@ rootProject.name = "demo-protocols"
 
 include(
     "common",
-    "demo-rsocket",
-    "demo-quic",
-    "demo-quic-netty",
-    "demo-quic-reactor"
+    "rsocket",
+    "http3-netty",
+    "http3-reactor",
+    "quic-kwik",
+    "quic-netty",
+    "quic-reactor"
 )
+
+include("http3-netty")
+
+include("http3-reactor")

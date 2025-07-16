@@ -16,19 +16,19 @@ const val CLIENT_ALIAS = "client"
 val TRUSTSTORE = File("etc/openssl/truststore.p12").let {
     if (it.exists()) it else File("../etc/openssl/truststore.p12")
 }
-val PASSWORD = "123456".toCharArray()
+val PASSWORD = "123456"
 
-val SERVER_KEY_STORE = KeyStore.getInstance(SERVER_KEYSTORE, PASSWORD)
+val SERVER_KEY_STORE = KeyStore.getInstance(SERVER_KEYSTORE, PASSWORD.toCharArray())
 val SERVER_KEY_MANAGER_FACTORY = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm()).apply {
-    init(SERVER_KEY_STORE, PASSWORD)
+    init(SERVER_KEY_STORE, PASSWORD.toCharArray())
 }
 
-val CLIENT_KEY_STORE = KeyStore.getInstance(CLIENT_KEYSTORE, PASSWORD)
+val CLIENT_KEY_STORE = KeyStore.getInstance(CLIENT_KEYSTORE, PASSWORD.toCharArray())
 val CLIENT_KEY_MANAGER_FACTORY = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm()).apply {
-    init(CLIENT_KEY_STORE, PASSWORD)
+    init(CLIENT_KEY_STORE, PASSWORD.toCharArray())
 }
 
-val TRUST_KEY_STORE = KeyStore.getInstance(TRUSTSTORE, PASSWORD)
+val TRUST_KEY_STORE = KeyStore.getInstance(TRUSTSTORE, PASSWORD.toCharArray())
 val TRUST_MANAGER_FACTORY = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm()).apply {
     init(TRUST_KEY_STORE)
 }
