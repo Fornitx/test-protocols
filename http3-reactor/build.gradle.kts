@@ -1,7 +1,7 @@
 dependencies {
     implementation(project(":common"))
     implementation("io.netty.incubator:netty-incubator-codec-http3:0.0.30.Final")
-    implementation("io.projectreactor.netty:reactor-netty:1.3.0-M4")
+    implementation("io.projectreactor.netty:reactor-netty:1.3.0-M5")
 
     val reactorVersion = project.configurations.compileClasspath.get()
         .incoming.resolutionResult.allDependencies.filter {

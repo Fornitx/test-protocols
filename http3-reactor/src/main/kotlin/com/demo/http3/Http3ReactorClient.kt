@@ -1,10 +1,10 @@
 package com.demo.http3
 
-import com.demo.constants.PORT
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory
+import com.demo.constants.NET.HOST
+import com.demo.constants.NET.PORT
+import com.demo.http3.ReactorUtils.CLIENT_SSL_CONTEXT
 import reactor.core.publisher.Mono
 import reactor.netty.ByteBufFlux
-import reactor.netty.http.Http3SslContextSpec
 import reactor.netty.http.HttpProtocol
 import reactor.netty.http.client.HttpClient
 import java.time.Duration
@@ -12,11 +12,7 @@ import java.time.Duration
 fun main() {
     val client = HttpClient.create()
         .protocol(HttpProtocol.HTTP3)
-        .secure {
-            val sslContext = Http3SslContextSpec.forClient()
-                .configure { it.trustManager(InsecureTrustManagerFactory.INSTANCE) }
-            it.sslContext(sslContext)
-        }
+        .secure { it.sslContext(CLIENT_SSL_CONTEXT) }
         .http3Settings({ spec ->
             spec.idleTimeout(Duration.ofSeconds(5))
                 .maxData(10000000)
@@ -24,7 +20,7 @@ fun main() {
         })
 
     val response = client.post()
-        .uri("https://127.0.0.1:$PORT/")
+        .uri("https://$HOST:$PORT/")
         .send(ByteBufFlux.fromString(Mono.just("Hello World!")))
         .responseSingle({ res, bytes ->
             bytes.asString()

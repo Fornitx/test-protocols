@@ -1,10 +1,10 @@
 package com.demo.quic
 
-import com.demo.constants.PASSWORD
-import com.demo.constants.PORT
-import com.demo.constants.PROTOCOL
-import com.demo.constants.SERVER_ALIAS
-import com.demo.constants.SERVER_KEY_STORE
+import com.demo.constants.NET.PORT
+import com.demo.constants.QUIC.PROTOCOL
+import com.demo.constants.TLS.PASSWORD_CHARS
+import com.demo.constants.TLS.SERVER_ALIAS
+import com.demo.constants.TLS.SERVER_KEYSTORE
 import com.demo.data.StringData.asResponse
 import com.demo.logging.ServerLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -22,9 +22,9 @@ private val log = KotlinLogging.logger {}
 
 fun main() {
     val serverConnectionConfig = ServerConnectionConfig.builder()
-        .maxIdleTimeoutInSeconds(30)
-        .maxUnidirectionalStreamBufferSize(1_000_000)
-        .maxBidirectionalStreamBufferSize(1_000_000)
+        .maxIdleTimeoutInSeconds(5)
+        .maxUnidirectionalStreamBufferSize(10_000_000)
+        .maxBidirectionalStreamBufferSize(10_000_000)
         .maxConnectionBufferSize(10_000_000)
         .maxOpenPeerInitiatedUnidirectionalStreams(10)
         .maxOpenPeerInitiatedBidirectionalStreams(100)
@@ -41,7 +41,7 @@ fun main() {
         .withSupportedVersions(listOf(QuicConnection.QuicVersion.V1, QuicConnection.QuicVersion.V2))
         .withConfiguration(serverConnectionConfig)
         .withLogger(logger)
-        .withKeyStore(SERVER_KEY_STORE, SERVER_ALIAS, PASSWORD)
+        .withKeyStore(SERVER_KEYSTORE, SERVER_ALIAS, PASSWORD_CHARS)
         .build()
 
     serverConnector.registerApplicationProtocol(PROTOCOL, EchoApplicationProtocolConnectionFactory())

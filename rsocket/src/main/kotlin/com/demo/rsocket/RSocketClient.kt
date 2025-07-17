@@ -1,6 +1,6 @@
 package com.demo.rsocket
 
-import com.demo.constants.PORT
+import com.demo.constants.NET
 import com.demo.data.StringData
 import com.demo.logging.ClientLogger
 import io.rsocket.core.RSocketConnector
@@ -12,7 +12,7 @@ import java.time.Duration
 
 fun main() {
     val clientTransport = TcpClientTransport.create(
-        TcpClient.create().port(PORT).secure {
+        TcpClient.create().port(NET.PORT).secure {
             it.sslContext(NettyUtils.CLIENT_SSL_CONTEXT)
         }
     )

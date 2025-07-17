@@ -1,8 +1,8 @@
 package com.demo.quic
 
-import com.demo.constants.PORT
-import com.demo.constants.PROTOCOL
-import com.demo.constants.TRUST_KEY_STORE
+import com.demo.constants.NET.PORT
+import com.demo.constants.QUIC.PROTOCOL
+import com.demo.constants.TLS
 import com.demo.data.StringData
 import com.demo.logging.ClientLogger
 import tech.kwik.core.QuicClientConnection
@@ -20,7 +20,7 @@ fun main() {
 //        .noServerCertificateCheck()
         .uri(URI.create("https://localhost:$PORT"))
         .applicationProtocol(PROTOCOL)
-        .customTrustStore(TRUST_KEY_STORE)
+        .customTrustStore(TLS.CLIENT_TRUSTSTORE)
         .logger(logger)
         .build()
     connection.connect()

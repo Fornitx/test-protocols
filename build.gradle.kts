@@ -5,6 +5,8 @@ plugins {
 allprojects {
     group = "org.example"
     version = "1.0-SNAPSHOT"
+
+    tasks.register<DependencyReportTask>("allDeps")
 }
 
 subprojects {

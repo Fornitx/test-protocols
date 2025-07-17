@@ -1,25 +1,18 @@
 package com.demo.http3
 
-import com.demo.constants.PASSWORD
-import com.demo.constants.PORT
-import com.demo.constants.SERVER_KEY_MANAGER_FACTORY
-import com.demo.constants.TRUST_MANAGER_FACTORY
+import com.demo.constants.NET.PORT
+import com.demo.http3.ReactorUtils.SERVER_SSL_CONTEXT
 import com.demo.logging.ServerLogger
 import reactor.core.publisher.Mono
-import reactor.netty.http.Http3SslContextSpec
 import reactor.netty.http.HttpProtocol
 import reactor.netty.http.server.HttpServer
 import java.time.Duration
 
 fun main() {
-    val sslContext = Http3SslContextSpec.forServer(SERVER_KEY_MANAGER_FACTORY, PASSWORD).configure {
-        it.trustManager(TRUST_MANAGER_FACTORY)
-    }
-
     val server = HttpServer.create()
         .port(PORT)
         .protocol(HttpProtocol.HTTP3)
-        .secure({ spec -> spec.sslContext(sslContext) })
+        .secure({ it.sslContext(SERVER_SSL_CONTEXT) })
         .http3Settings({ spec ->
             spec.idleTimeout(Duration.ofSeconds(5))
                 .maxData(10000000)

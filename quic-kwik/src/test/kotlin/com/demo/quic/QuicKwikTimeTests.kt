@@ -1,12 +1,8 @@
 package com.demo.quic
 
-import com.demo.constants.CLIENT_KEY_STORE
-import com.demo.constants.PASSWORD
-import com.demo.constants.PORT
-import com.demo.constants.PROTOCOL
-import com.demo.constants.SERVER_ALIAS
-import com.demo.constants.SERVER_KEY_STORE
-import com.demo.constants.TRUST_KEY_STORE
+import com.demo.constants.NET.PORT
+import com.demo.constants.QUIC.PROTOCOL
+import com.demo.constants.TLS
 import com.demo.data.StringData.asResponse
 import com.demo.logging.ServerLogger
 import com.demo.test.MEASUREMENTS
@@ -57,7 +53,7 @@ class QuicKwikTimeTests {
             .withSupportedVersions(listOf(QuicConnection.QuicVersion.V1, QuicConnection.QuicVersion.V2))
             .withConfiguration(serverConnectionConfig)
             .withLogger(logger)
-            .withKeyStore(SERVER_KEY_STORE, SERVER_ALIAS, PASSWORD)
+            .withKeyStore(TLS.SERVER_KEYSTORE, TLS.SERVER_ALIAS, TLS.PASSWORD_CHARS)
             // TODO NO MTLS !!!
             .build()
 
@@ -107,9 +103,9 @@ class QuicKwikTimeTests {
                     val connection = QuicClientConnection.newBuilder()
                         .uri(URI.create("https://localhost:$PORT"))
                         .applicationProtocol(PROTOCOL)
-                        .clientKeyManager(CLIENT_KEY_STORE)
-                        .clientKey(PASSWORD.concatToString())
-                        .customTrustStore(TRUST_KEY_STORE)
+                        .clientKeyManager(TLS.CLIENT_KEYSTORE)
+                        .clientKey(TLS.PASSWORD)
+                        .customTrustStore(TLS.CLIENT_TRUSTSTORE)
                         .logger(NullLogger())
                         .build()
                     connection.connect()

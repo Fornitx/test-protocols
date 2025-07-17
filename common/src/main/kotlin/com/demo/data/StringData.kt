@@ -6,7 +6,7 @@ object StringData {
     val VALUES = listOf("foo", "bar", "baz")
 
     fun String.asResponse(): String {
-        if (this.length > 10) {
+        if (this.length > 3) {
             return this
         }
         return List(3) { this.uppercase() }.joinToString("_")

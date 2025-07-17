@@ -1,19 +1,19 @@
 package com.demo.rsocket
 
-import com.demo.constants.CLIENT_KEY_MANAGER_FACTORY
-import com.demo.constants.SERVER_KEY_MANAGER_FACTORY
-import com.demo.constants.TRUST_MANAGER_FACTORY
+import com.demo.constants.TLS
+import io.netty.handler.ssl.ClientAuth
 import io.netty.handler.ssl.SslContextBuilder
 import io.rsocket.transport.netty.server.CloseableChannel
 
 object NettyUtils {
     val SERVER_SSL_CONTEXT = SslContextBuilder
-        .forServer(SERVER_KEY_MANAGER_FACTORY)
-        .trustManager(TRUST_MANAGER_FACTORY)
+        .forServer(TLS.SERVER_KEYMANAGERFACTORY)
+        .trustManager(TLS.SERVER_TRUSTMANAGERFACTORY)
+        .clientAuth(ClientAuth.REQUIRE)
         .build()
     val CLIENT_SSL_CONTEXT = SslContextBuilder.forClient()
-        .keyManager(CLIENT_KEY_MANAGER_FACTORY)
-        .trustManager(TRUST_MANAGER_FACTORY)
+        .keyManager(TLS.CLIENT_KEYMANAGERFACTORY)
+        .trustManager(TLS.CLIENT_TRUSTMANAGERFACTORY)
         .build()
 
     fun CloseableChannel.use(block: () -> Unit) {
@@ -21,6 +21,7 @@ object NettyUtils {
             block()
         } finally {
             this.dispose()
+            this.onClose().block()
         }
     }
 }

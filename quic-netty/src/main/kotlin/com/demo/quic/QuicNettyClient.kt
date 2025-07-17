@@ -1,7 +1,7 @@
 package com.demo.quic
 
-import com.demo.constants.PORT
-import com.demo.constants.PROTOCOL
+import com.demo.constants.NET.PORT
+import com.demo.constants.QUIC.PROTOCOL
 import com.demo.data.StringData
 import com.demo.logging.ClientLogger
 import io.github.oshai.kotlinlogging.KotlinLogging

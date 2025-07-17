@@ -1,9 +1,9 @@
-import com.demo.constants.CLIENT_KEY_MANAGER_FACTORY
-import com.demo.constants.PASSWORD
-import com.demo.constants.PORT
-import com.demo.constants.PROTOCOL
-import com.demo.constants.SERVER_KEY_MANAGER_FACTORY
-import com.demo.constants.TRUST_MANAGER_FACTORY
+package com.demo.quic
+
+import com.demo.constants.NET.PORT
+import com.demo.constants.QUIC.PROTOCOL
+import com.demo.constants.TLS
+import com.demo.constants.TLS.PASSWORD
 import com.demo.data.StringData.asResponse
 import com.demo.logging.ServerLogger
 import com.demo.quic.NettyUtils.use
@@ -34,9 +34,9 @@ private val log = KotlinLogging.logger {}
 class QuicNettyTimeTests {
     private fun startServer(udpPort: Int): Pair<Channel, NioEventLoopGroup> {
         val sslContext = QuicSslContextBuilder.forServer(
-            SERVER_KEY_MANAGER_FACTORY, PASSWORD.concatToString()
+            TLS.SERVER_KEYMANAGERFACTORY, PASSWORD
         )
-            .trustManager(TRUST_MANAGER_FACTORY)
+            .trustManager(TLS.SERVER_TRUSTMANAGERFACTORY)
             .applicationProtocols(PROTOCOL)
             .build()
         val group = NioEventLoopGroup(1)
@@ -86,8 +86,8 @@ class QuicNettyTimeTests {
     fun connectionOnlyTest() {
         startServer(PORT).use {
             val context = QuicSslContextBuilder.forClient()
-                .keyManager(CLIENT_KEY_MANAGER_FACTORY, PASSWORD.concatToString())
-                .trustManager(TRUST_MANAGER_FACTORY)
+                .keyManager(TLS.CLIENT_KEYMANAGERFACTORY, PASSWORD)
+                .trustManager(TLS.CLIENT_TRUSTMANAGERFACTORY)
 //                .trustManager(InsecureTrustManagerFactory.INSTANCE)
                 .applicationProtocols(PROTOCOL)
                 .build()
@@ -124,12 +124,12 @@ class QuicNettyTimeTests {
 //                    object : ChannelInboundHandlerAdapter() {
 //                        override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
 //                            val byteBuf = msg as ByteBuf
-//                            ClientLogger.log(byteBuf.toString(Charsets.UTF_8))
+//                            ClientLogger.com.demo.quic.log(byteBuf.toString(Charsets.UTF_8))
 //                            byteBuf.release()
 //                        }
 //
 //                        override fun userEventTriggered(ctx: ChannelHandlerContext, evt: Any) {
-//                            log.info { "userEventTriggered: $evt" }
+//                            com.demo.quic.log.info { "userEventTriggered: $evt" }
 //                            if (evt === ChannelInputShutdownReadComplete.INSTANCE) {
 //                                (ctx.channel().parent() as QuicChannel).close(
 //                                    true, 0,

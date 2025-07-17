@@ -1,10 +1,8 @@
 package com.demo.quic
 
-import com.demo.constants.PASSWORD
-import com.demo.constants.PORT
-import com.demo.constants.PROTOCOL
-import com.demo.constants.SERVER_KEY_MANAGER_FACTORY
-import com.demo.constants.TRUST_MANAGER_FACTORY
+import com.demo.constants.NET.PORT
+import com.demo.constants.QUIC.PROTOCOL
+import com.demo.constants.TLS
 import com.demo.data.StringData.asResponse
 import com.demo.logging.ServerLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -24,9 +22,9 @@ private val log = KotlinLogging.logger {}
 
 fun main() {
     val sslContext = QuicSslContextBuilder.forServer(
-        SERVER_KEY_MANAGER_FACTORY, PASSWORD.concatToString()
+        TLS.SERVER_KEYMANAGERFACTORY, TLS.PASSWORD
     )
-        .trustManager(TRUST_MANAGER_FACTORY)
+        .trustManager(TLS.SERVER_TRUSTMANAGERFACTORY)
         .applicationProtocols(PROTOCOL)
         .build()
     val group = NioEventLoopGroup(1)

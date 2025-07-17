@@ -1,6 +1,6 @@
 package com.demo.rsocket
 
-import com.demo.constants.PORT
+import com.demo.constants.NET
 import com.demo.data.StringData.asResponse
 import com.demo.logging.ServerLogger
 import io.rsocket.SocketAcceptor
@@ -20,7 +20,7 @@ fun main() {
     }
 
     val serverTransport = TcpServerTransport.create(
-        TcpServer.create().port(PORT).secure {
+        TcpServer.create().port(NET.PORT).secure {
             it.sslContext(NettyUtils.SERVER_SSL_CONTEXT)
         }
     )

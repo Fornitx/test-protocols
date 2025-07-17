@@ -1,6 +1,6 @@
 package com.demo.http3
 
-import com.demo.constants.PORT
+import com.demo.constants.NET.PORT
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.nio.NioEventLoopGroup
