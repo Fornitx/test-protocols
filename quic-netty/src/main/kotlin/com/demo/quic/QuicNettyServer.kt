@@ -4,7 +4,6 @@ import com.demo.constants.NET.PORT
 import com.demo.data.StringData.asResponse
 import com.demo.logging.ServerLogger
 import com.demo.quic.NettyUtils.SERVER_SSL_CONTEXT
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
@@ -17,8 +16,6 @@ import io.netty.incubator.codec.quic.QuicServerCodecBuilder
 import io.netty.incubator.codec.quic.QuicStreamChannel
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
-
-private val log = KotlinLogging.logger {}
 
 fun main() {
     val group = NioEventLoopGroup(1)
