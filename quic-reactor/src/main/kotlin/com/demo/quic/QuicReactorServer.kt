@@ -5,12 +5,11 @@ import com.demo.constants.NET.PORT
 import com.demo.data.StringData.asResponse
 import com.demo.logging.ServerLogger
 import com.demo.quic.ReactorUtils.SERVER_SSL_CONTEXT
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.handler.codec.quic.InsecureQuicTokenHandler
+import reactor.core.publisher.Mono
+import reactor.netty.ByteBufMono
 import reactor.netty.quic.QuicServer
 import java.time.Duration
-
-private val log = KotlinLogging.logger {}
 
 fun main() {
     val server = QuicServer.create()
@@ -22,14 +21,17 @@ fun main() {
         .idleTimeout(Duration.ofSeconds(5))
         .initialSettings { spec ->
             spec.maxData(10_000_000)
+                .maxStreamDataBidirectionalLocal(10_000_000)
                 .maxStreamDataBidirectionalRemote(10_000_000)
+                .maxStreamDataUnidirectional(10_000_000)
                 .maxStreamsBidirectional(100)
+                .maxStreamsUnidirectional(100)
         }
         .handleStream { `in`, out ->
-            out.sendString(
+            out.sendGroups(
                 `in`.receive().asString(Charsets.UTF_8).map { str ->
                     ServerLogger.log(str)
-                    str.asResponse()
+                    ByteBufMono.fromString(Mono.just(str.asResponse()))
                 }
             )
         }

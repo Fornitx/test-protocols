@@ -12,7 +12,7 @@ object StringData {
         return List(3) { this.uppercase() }.joinToString("_")
     }
 
-    fun randomText(count: Int = 12): String {
+    fun randomText(count: Int): String {
         return RandomStringUtils.insecure().nextAlphanumeric(count)
     }
 }

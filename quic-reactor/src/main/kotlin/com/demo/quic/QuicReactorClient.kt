@@ -7,7 +7,8 @@ import com.demo.logging.ClientLogger
 import com.demo.quic.ReactorUtils.CLIENT_SSL_CONTEXT
 import io.netty.handler.codec.quic.QuicStreamType
 import reactor.core.publisher.Flux
-import reactor.netty.ByteBufFlux
+import reactor.core.publisher.Mono
+import reactor.netty.ByteBufMono
 import reactor.netty.quic.QuicClient
 import java.net.InetSocketAddress
 import java.time.Duration
@@ -23,21 +24,24 @@ fun main() {
         .initialSettings { spec ->
             spec.maxData(10_000_000)
                 .maxStreamDataBidirectionalLocal(10_000_000)
+                .maxStreamDataBidirectionalRemote(10_000_000)
+                .maxStreamDataUnidirectional(10_000_000)
+                .maxStreamsBidirectional(100)
+                .maxStreamsUnidirectional(100)
         }
         .connectNow()
 
     val latch = CountDownLatch(3)
     client.createStream(QuicStreamType.BIDIRECTIONAL) { `in`, out ->
-        out.send(ByteBufFlux.fromString(Flux.fromIterable(StringData.VALUES)))
-            .then(
-                `in`.receive()
-                    .asString(Charsets.UTF_8)
-                    .doOnNext { str ->
-                        ClientLogger.log(str)
-                        latch.countDown()
-                    }
-                    .then()
-            )
+        Mono.`when`(
+            out.sendGroups(Flux.fromIterable(StringData.VALUES).map { ByteBufMono.fromString(Mono.just(it)) }),
+            `in`.receive()
+                .asString(Charsets.UTF_8)
+                .doOnNext { str ->
+                    ClientLogger.log(str)
+                    latch.countDown()
+                },
+        )
     }.subscribe()
 
     latch.await()

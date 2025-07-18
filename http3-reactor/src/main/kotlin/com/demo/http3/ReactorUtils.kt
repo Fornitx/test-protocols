@@ -1,34 +1,23 @@
 package com.demo.http3
 
-import com.demo.constants.TLS
+import com.demo.constants.TLS.PASSWORD
+import com.demo.constants.TLS2
 import io.netty.handler.ssl.ClientAuth
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory
-import reactor.netty.DisposableServer
 import reactor.netty.http.Http3SslContextSpec
 
 object ReactorUtils {
     val SERVER_SSL_CONTEXT = Http3SslContextSpec
-        .forServer(TLS.SERVER_KEYMANAGERFACTORY, TLS.PASSWORD)
+        .forServer(TLS2.SERVER_KEYMANAGERFACTORY, PASSWORD)
         .configure { quicSslContextBuilder ->
             quicSslContextBuilder
-                .trustManager(TLS.SERVER_TRUSTMANAGERFACTORY)
+                .trustManager(TLS2.SERVER_TRUSTMANAGERFACTORY)
                 .clientAuth(ClientAuth.REQUIRE)
         }
     val CLIENT_SSL_CONTEXT = Http3SslContextSpec
         .forClient()
         .configure { quicSslContextBuilder ->
             quicSslContextBuilder
-                .keyManager(TLS.CLIENT_KEYMANAGERFACTORY, TLS.PASSWORD)
-                // TODO InsecureTrustManagerFactory
-                .trustManager(InsecureTrustManagerFactory.INSTANCE)
-//                .trustManager(TLS.CLIENT_TRUSTMANAGERFACTORY)
+                .keyManager(TLS2.CLIENT_KEYMANAGERFACTORY, PASSWORD)
+                .trustManager(TLS2.CLIENT_TRUSTMANAGERFACTORY)
         }
-
-    fun DisposableServer.use(block: () -> Unit) {
-        try {
-            block()
-        } finally {
-            this.dispose()
-        }
-    }
 }

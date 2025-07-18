@@ -6,7 +6,7 @@ import com.demo.logging.ServerLogger
 import io.rsocket.SocketAcceptor
 import io.rsocket.core.RSocketServer
 import io.rsocket.transport.netty.server.TcpServerTransport
-import io.rsocket.util.DefaultPayload
+import io.rsocket.util.ByteBufPayload
 import reactor.core.publisher.Flux
 import reactor.netty.tcp.TcpServer
 
@@ -15,7 +15,7 @@ fun main() {
         Flux.from(requests).map { payload ->
             val dataUtf8 = payload.dataUtf8
             ServerLogger.log(dataUtf8)
-            DefaultPayload.create(dataUtf8.asResponse())
+            ByteBufPayload.create(dataUtf8.asResponse())
         }
     }
 

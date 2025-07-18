@@ -1,9 +1,8 @@
 package com.demo.quic
 
 import com.demo.constants.NET.PORT
-import com.demo.constants.QUIC.PROTOCOL
-import com.demo.data.StringData
 import com.demo.logging.ClientLogger
+import com.demo.quic.NettyUtils.CLIENT_SSL_CONTEXT
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.ByteBuf
@@ -13,10 +12,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.ChannelInputShutdownReadComplete
 import io.netty.channel.socket.nio.NioDatagramChannel
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory
 import io.netty.incubator.codec.quic.QuicChannel
 import io.netty.incubator.codec.quic.QuicClientCodecBuilder
-import io.netty.incubator.codec.quic.QuicSslContextBuilder
 import io.netty.incubator.codec.quic.QuicStreamChannel
 import io.netty.incubator.codec.quic.QuicStreamType
 import io.netty.util.NetUtil
@@ -26,19 +23,17 @@ import java.util.concurrent.TimeUnit
 private val log = KotlinLogging.logger {}
 
 fun main() {
-    val context = QuicSslContextBuilder.forClient()
-//        .keyManager(CLIENT_KEY_MANAGER_FACTORY, PASSWORD.concatToString())
-//        .trustManager(TRUST_MANAGER_FACTORY)
-        .trustManager(InsecureTrustManagerFactory.INSTANCE)
-        .applicationProtocols(PROTOCOL)
-        .build()
     val group = NioEventLoopGroup(1)
     try {
         val codec = QuicClientCodecBuilder()
-            .sslContext(context)
+            .sslContext(CLIENT_SSL_CONTEXT)
             .maxIdleTimeout(5_000, TimeUnit.MILLISECONDS)
             .initialMaxData(10_000_000)
-            .initialMaxStreamDataBidirectionalLocal(1_000_000)
+            .initialMaxStreamDataBidirectionalLocal(10_000_000)
+            .initialMaxStreamDataBidirectionalRemote(10_000_000)
+            .initialMaxStreamDataUnidirectional(10_000_000)
+            .initialMaxStreamsBidirectional(100)
+            .initialMaxStreamsUnidirectional(100)
             .build()
 
         val bs = Bootstrap()
@@ -90,14 +85,16 @@ fun main() {
                 }
             }).sync().getNow()
 
-        for ((index, value) in StringData.VALUES.withIndex()) {
-            streamChannel.writeAndFlush(Unpooled.copiedBuffer(value, Charsets.UTF_8)).apply {
-                if (index == StringData.VALUES.size - 1) {
-                    addListener(QuicStreamChannel.SHUTDOWN_OUTPUT)
-                }
-            }
-            TimeUnit.SECONDS.sleep(1)
-        }
+//        for ((index, value) in StringData.VALUES.withIndex()) {
+//            streamChannel.writeAndFlush(Unpooled.copiedBuffer(value, Charsets.UTF_8)).apply {
+//                if (index == StringData.VALUES.size - 1) {
+//                    addListener(QuicStreamChannel.SHUTDOWN_OUTPUT)
+//                }
+//            }
+//            TimeUnit.SECONDS.sleep(1)
+//        }
+        streamChannel.writeAndFlush(Unpooled.copiedBuffer("GET /\r\n", Charsets.UTF_8))
+            .addListener(QuicStreamChannel.SHUTDOWN_OUTPUT)
 
         streamChannel.closeFuture().sync()
         quicChannel.closeFuture().sync()

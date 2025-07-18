@@ -5,7 +5,7 @@ import com.demo.data.StringData
 import com.demo.logging.ClientLogger
 import io.rsocket.core.RSocketConnector
 import io.rsocket.transport.netty.client.TcpClientTransport
-import io.rsocket.util.DefaultPayload
+import io.rsocket.util.ByteBufPayload
 import reactor.core.publisher.Flux
 import reactor.netty.tcp.TcpClient
 import java.time.Duration
@@ -21,7 +21,7 @@ fun main() {
 
     rSocket.requestChannel(
         Flux.fromIterable(StringData.VALUES)
-            .map(DefaultPayload::create)
+            .map(ByteBufPayload::create)
             .delayElements(Duration.ofSeconds(1))
     )
         .doOnNext { next -> ClientLogger.log(next.dataUtf8) }

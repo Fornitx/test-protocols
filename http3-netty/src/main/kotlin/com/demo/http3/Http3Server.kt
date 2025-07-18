@@ -1,13 +1,13 @@
 package com.demo.http3
 
 import com.demo.constants.NET.PORT
+import com.demo.http3.NettyUtils.SERVER_SSL_CONTEXT
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioDatagramChannel
-import io.netty.handler.ssl.util.SelfSignedCertificate
 import io.netty.incubator.codec.http3.DefaultHttp3DataFrame
 import io.netty.incubator.codec.http3.DefaultHttp3HeadersFrame
 import io.netty.incubator.codec.http3.Http3
@@ -17,7 +17,6 @@ import io.netty.incubator.codec.http3.Http3RequestStreamInboundHandler
 import io.netty.incubator.codec.http3.Http3ServerConnectionHandler
 import io.netty.incubator.codec.quic.InsecureQuicTokenHandler
 import io.netty.incubator.codec.quic.QuicChannel
-import io.netty.incubator.codec.quic.QuicSslContextBuilder
 import io.netty.incubator.codec.quic.QuicStreamChannel
 import io.netty.util.CharsetUtil
 import io.netty.util.ReferenceCountUtil
@@ -28,16 +27,15 @@ val CONTENT = "Hello World!\r\n".toByteArray(CharsetUtil.UTF_8)
 
 fun main() {
     val group = NioEventLoopGroup(1)
-    val cert = SelfSignedCertificate()
-    val sslContext = QuicSslContextBuilder.forServer(cert.key(), null, cert.cert())
-        .applicationProtocols(*Http3.supportedApplicationProtocols()).build()
     val codec = Http3.newQuicServerCodecBuilder()
-        .sslContext(sslContext)
+        .sslContext(SERVER_SSL_CONTEXT)
         .maxIdleTimeout(5000, TimeUnit.MILLISECONDS)
-        .initialMaxData(10000000)
-        .initialMaxStreamDataBidirectionalLocal(1000000)
-        .initialMaxStreamDataBidirectionalRemote(1000000)
+        .initialMaxData(10_000_000)
+        .initialMaxStreamDataBidirectionalLocal(10_000_000)
+        .initialMaxStreamDataBidirectionalRemote(10_000_000)
+        .initialMaxStreamDataUnidirectional(10_000_000)
         .initialMaxStreamsBidirectional(100)
+        .initialMaxStreamsUnidirectional(100)
         .tokenHandler(InsecureQuicTokenHandler.INSTANCE)
         .handler(object : ChannelInitializer<QuicChannel>() {
             override fun initChannel(ch: QuicChannel) {

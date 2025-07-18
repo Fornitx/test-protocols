@@ -1,32 +1,20 @@
 package com.demo.quic
 
 import com.demo.constants.QUIC.PROTOCOL
-import com.demo.constants.TLS
+import com.demo.constants.TLS.PASSWORD
+import com.demo.constants.TLS2
 import io.netty.handler.codec.quic.QuicSslContextBuilder
 import io.netty.handler.ssl.ClientAuth
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory
-import reactor.netty.Connection
 
 object ReactorUtils {
-    val SERVER_SSL_CONTEXT = QuicSslContextBuilder.forServer(TLS.SERVER_KEYMANAGERFACTORY, TLS.PASSWORD)
-        .trustManager(TLS.SERVER_TRUSTMANAGERFACTORY)
-        .clientAuth(ClientAuth.REQUIRE)
+    val SERVER_SSL_CONTEXT = QuicSslContextBuilder.forServer(TLS2.SERVER_KEYMANAGERFACTORY, PASSWORD)
+        .trustManager(TLS2.SERVER_TRUSTMANAGERFACTORY)
         .applicationProtocols(PROTOCOL)
+        .clientAuth(ClientAuth.REQUIRE)
         .build()
     val CLIENT_SSL_CONTEXT = QuicSslContextBuilder.forClient()
-        .keyManager(TLS.CLIENT_KEYMANAGERFACTORY, TLS.PASSWORD)
-        // TODO InsecureTrustManagerFactory
-//        .trustManager(TLS.CLIENT_TRUSTMANAGERFACTORY)
-        .trustManager(InsecureTrustManagerFactory.INSTANCE)
+        .keyManager(TLS2.CLIENT_KEYMANAGERFACTORY, PASSWORD)
+        .trustManager(TLS2.CLIENT_TRUSTMANAGERFACTORY)
         .applicationProtocols(PROTOCOL)
         .build()
-
-    fun Connection.use(block: () -> Unit) {
-        try {
-            block()
-        } finally {
-            this.dispose()
-            this.onDispose().block()
-        }
-    }
 }

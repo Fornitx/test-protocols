@@ -4,7 +4,7 @@ import com.demo.constants.NET.HOST
 import com.demo.constants.NET.PORT
 import com.demo.http3.ReactorUtils.CLIENT_SSL_CONTEXT
 import reactor.core.publisher.Mono
-import reactor.netty.ByteBufFlux
+import reactor.netty.ByteBufMono
 import reactor.netty.http.HttpProtocol
 import reactor.netty.http.client.HttpClient
 import java.time.Duration
@@ -21,7 +21,7 @@ fun main() {
 
     val response = client.post()
         .uri("https://$HOST:$PORT/")
-        .send(ByteBufFlux.fromString(Mono.just("Hello World!")))
+        .send(ByteBufMono.fromString(Mono.just("Hello World!")))
         .responseSingle({ res, bytes ->
             bytes.asString()
                 .zipWith(Mono.just(res.responseHeaders()))
