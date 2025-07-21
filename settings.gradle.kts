@@ -13,18 +13,16 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "demo-protocols"
+rootProject.name = "test-protocols"
 
 include(
     "common",
     "rsocket",
+    "http3-jetty",
     "http3-netty",
     "http3-reactor",
+    "quic-jetty",
     "quic-kwik",
     "quic-netty",
     "quic-reactor"
 )
-
-include("http3-netty")
-
-include("http3-reactor")
