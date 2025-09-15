@@ -14,5 +14,5 @@ dependencies {
         }.map { (it.requested as ModuleComponentSelector).version }.toSet().single()
 
     testImplementation("io.projectreactor:reactor-test:$reactorVersion")
-    testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.3")
+    testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.2.4")
 }
