@@ -18,7 +18,7 @@ kotlin-arrow-fx = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "k
 logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
 
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version = "3.18.0" }
-guava = { module = "com.google.guava:guava", version = "33.4.8-jre" }
+guava = { module = "com.google.guava:guava", version = "33.5.0-jre" }
 
 commons-math4 = { module = "org.apache.commons:commons-math4-legacy", version = "4.0-beta1" }
 
