@@ -15,7 +15,7 @@ kotlin-io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "k
 kotlin-arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "kotlin2-arrow" }
 kotlin-arrow-fx = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "kotlin2-arrow" }
 
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.18" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.20" }
 
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version = "3.18.0" }
 guava = { module = "com.google.guava:guava", version = "33.5.0-jre" }
